@@ -44,8 +44,8 @@
             const leagues = [...new Set(programmes.map(p => p.league))];
             const dates = [...new Set(programmes.map(p => p.date))];
             
-            document.getElementById('leagueFilter').innerHTML += leagues.map(l => `<option value="${l}">${l}</option>`).join('');
-            document.getElementById('dateFilter').innerHTML += dates.map(d => `<option value="${d}">${d}</option>`).join('');
+            document.getElementById('leagueFilter').innerHTML = '<option value="">All Leagues</option>' + leagues.map(l => `<option value="${l}">${l}</option>`).join('');
+            document.getElementById('dateFilter').innerHTML = '<option value="">All Dates</option>' + dates.map(d => `<option value="${d}">${d}</option>`).join('');
         }
         
         function displayProgrammes() {
@@ -71,6 +71,8 @@
         document.getElementById('search').addEventListener('input', displayProgrammes);
         document.getElementById('leagueFilter').addEventListener('change', displayProgrammes);
         document.getElementById('dateFilter').addEventListener('change', displayProgrammes);
+        
+        setInterval(loadProgrammes, 5000); // Reload data every 5 seconds
         
         loadProgrammes();
     </script>
