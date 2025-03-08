@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Matchday Programmes</title>
+    <style>
+        body { font-family: Arial, sans-serif; background-color: #121212; color: white; text-align: center; }
+        .container { max-width: 900px; margin: auto; padding: 20px; }
+        .search-bar, .filters { margin-bottom: 20px; }
+        .programme { background: #1e1e1e; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .programme h3 { margin: 0; }
+        .btn { display: inline-block; padding: 8px 15px; margin-top: 10px; background: #ffcc00; color: #000; text-decoration: none; border-radius: 5px; }
+        select, input { padding: 8px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Football Matchday Programmes</h1>
+        
+        <input type="text" id="search" class="search-bar" placeholder="Search programmes...">
+        
+        <select id="leagueFilter" class="filters">
+            <option value="">All Leagues</option>
+        </select>
+        <select id="dateFilter" class="filters">
+            <option value="">All Dates</option>
+        </select>
+        
+        <div id="programmeList"></div>
+    </div>
+
+    <script>
+        let programmes = [];
+        
+        async function loadProgrammes() {
+            const response = await fetch('programmes.json');
+            programmes = await response.json();
+            populateFilters();
+            displayProgrammes();
+        }
+        
+        function populateFilters() {
+            const leagues = [...new Set(programmes.map(p => p.league))];
+            const dates = [...new Set(programmes.map(p => p.date))];
+            
+            document.getElementById('leagueFilter').innerHTML += leagues.map(l => `<option value="${l}">${l}</option>`).join('');
+            document.getElementById('dateFilter').innerHTML += dates.map(d => `<option value="${d}">${d}</option>`).join('');
+        }
+        
+        function displayProgrammes() {
+            const search = document.getElementById('search').value.toLowerCase();
+            const leagueFilter = document.getElementById('leagueFilter').value;
+            const dateFilter = document.getElementById('dateFilter').value;
+            
+            const filtered = programmes.filter(p => 
+                (p.title.toLowerCase().includes(search)) &&
+                (leagueFilter === "" || p.league === leagueFilter) &&
+                (dateFilter === "" || p.date === dateFilter)
+            );
+            
+            document.getElementById('programmeList').innerHTML = filtered.map(p => `
+                <div class="programme">
+                    <h3>${p.title}</h3>
+                    <p>${p.league} | ${p.date}</p>
+                    <a href="${p.link}" target="_blank" class="btn">View Now</a>
+                </div>
+            `).join('');
+        }
+        
+        document.getElementById('search').addEventListener('input', displayProgrammes);
+        document.getElementById('leagueFilter').addEventListener('change', displayProgrammes);
+        document.getElementById('dateFilter').addEventListener('change', displayProgrammes);
+        
+        loadProgrammes();
+    </script>
+</body>
+</html>
