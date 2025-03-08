@@ -3,6 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
     <title>Matchday Programmes</title>
     <style>
         body { font-family: Arial, sans-serif; background-color: #121212; color: white; text-align: center; }
@@ -16,7 +19,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Football Matchday Programmes</h1>
+        <h1>Sportwave Matchday Programmes</h1>
         
         <input type="text" id="search" class="search-bar" placeholder="Search programmes...">
         
@@ -34,7 +37,7 @@
         let programmes = [];
         
         async function loadProgrammes() {
-            const response = await fetch('programmes.json');
+            const response = await fetch('programmes.json', { cache: 'no-store', credentials: 'omit' });
             programmes = await response.json();
             populateFilters();
             displayProgrammes();
